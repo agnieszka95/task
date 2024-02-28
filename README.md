@@ -5,26 +5,21 @@
 - Single Egress IP: ensure a single IP for outbound cluster traffic
 - Multi-Region, multi-environment directory structure
 
-**Prerequisites**
-- AWS Account: With permissions to deploy resources (EKS, EC2, VPC, etc.)
-- Terraform: Installed on your system
-- AWS CLI: Configured with your AWS credentials.
-
 **Terraform directory structure**
-1) modules:
-  - eks: defines EKS cluster configuration:
-    Create the EKS cluster, specifying the VPC and subnets.
-    Create worker node groups associated with the VPC and subnets.
-    Ensure worker nodes use a launch configuration configured to pass the correct private subnets to ensure traffic is routed through the NAT Gateway.
+1. modules:
+   - eks: defines EKS cluster configuration:
+      - Create the EKS cluster, specifying the VPC and subnets.
+      - Create worker node groups associated with the VPC and subnets.
+      - Ensure worker nodes use a launch configuration configured to pass the correct private subnets to ensure traffic is routed through the NAT Gateway.
     
   - nat: configures the NAT Gateway logic:
-    Allocate an Elastic IP address.
-    Create a NAT Gateway in a public subnet.
-    Update the route table for private subnets to use the NAT Gateway.
+      - Allocate an Elastic IP address.
+      - Create a NAT Gateway in a public subnet.
+      - Update the route table for private subnets to use the NAT Gateway.
     
   - vpc: manages VPC, subnets, route tables:
-    Create VPC, public and private subnets, Internet Gateway.
-    Set up route tables to direct internet traffic from private subnets via a NAT Gateway.
+      - Create VPC, public and private subnets, Internet Gateway.
+      - Set up route tables to direct internet traffic from private subnets via a NAT Gateway.
 
 2) regions: holds region-specific TF configurations
 Each region has its own main.tf and environment-specific .tfvars files for customization.
@@ -51,25 +46,33 @@ This code sets up a basic HTTP server that listens on port 80 that serves a simp
 
 **Build the Docker image**
 Run the following command in the directory where Dockerfile and Golang application files (main.go, file.p12) are located:
+```
 docker build -t my-golang-app .
+```
 
 **Run the Docker container**
+```
 docker run -p 8080:80 -v $(pwd)/file.p12:/app/file.p12 my-golang-app
+```
 
 This command will run the Docker container and map port 8080 on host to port 80 in the container. It also mounts the file.p12 from the host to the /app directory in the container.
 
 **Accessing the app**
-You can access the Golang application by navigating to http://localhost:8080 in your web browser.
+Access the Golang application by navigating to http://localhost:8080 in web browser.
 
 ### PHP app
 This code checks the APP_ENV environment variable and prints the contents of the config file if the environment is production. Otherwise, it returns an HTTP 500 internal server error.
 
 **Build the Docker image**
 Run the following command in the directory where Dockerfile is located:
+```
 docker build -t my-php-app .
+```
 
 **Run the Docker container**
+```
 docker run -d -p 8080:80 --env APP_ENV=prod my-php-app 
+```
 
 **Explanation**
 Environment variable: The ENV APP_ENV=dev sets a default development environment.
