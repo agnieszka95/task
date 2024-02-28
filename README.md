@@ -179,3 +179,19 @@ How it Works:
   - The Metrics Server (if not installed, we shoudl install it) collects resource usage data (CPU, memory) from pods.
   - The HPA controller periodically checks these metrics against the targets defined.
   - If a target metric is being exceeded, the HPA will instruct Kubernetes to scale the number of pods in Deployment up or down.
+
+## Task 5 - Setup RDS Postgresql/MySQL database using Terraform
+
+General Steps
+
+1. Create the aws_db_instance resource.
+2. Define aws_security_group resources to control traffic - restrict access to the DB only from authorized sources.
+3. Set up an aws_db_subnet_group - place RDS instances in private subnets and control access for enhanced security.
+4. Apply the Configuration: run terraform init, terraform plan, and terraform apply.
+
+Considerations:
+- Backup and Snapshots
+- High Availability:
+  - For production environments, use multi-AZ deployments with multi_az = true in aws_db_instance resource.
+- Read Replicas:
+  - Create read replicas for scaling read operations.
