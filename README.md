@@ -21,7 +21,7 @@
       - Create VPC, public and private subnets, Internet Gateway.
       - Set up route tables to direct internet traffic from private subnets via a NAT Gateway.
 
-2. regions:
+2. regions (regions/eu-north-1/main.tf):
   - Each region has its own main.tf and environment-specific .tfvars files for customization.
   - Call the VPC, NAT Gateway, and EKS modules.
   - Use terraform workspace to manage production and testing environments.
@@ -32,12 +32,10 @@
 5. providers.tf:
   - defines the AWS provider and other required providers
 
-Region Configuration (regions/eu-north-1/main.tf)
-
 **Deployment**
-Initialize Terraform in each region directory.
-Use terraform workspace select to choose the environment.
-Run terraform plan and terraform apply.
+  - Initialize Terraform in each region directory.
+  - Use terraform workspace select to choose the environment.
+  - Run terraform plan and terraform apply.
 
 ## Task 2 - Dockerize apps:
 
