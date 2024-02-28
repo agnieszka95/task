@@ -76,3 +76,106 @@ docker run -d -p 8080:80 --env APP_ENV=prod my-php-app
   - Environment variable: The ENV APP_ENV=dev sets a default development environment.
   - Config setup: The RUN if [ "$APP_ENV" = "prod" ]; then mv config.prod config; fi command executes only when the APP_ENV is set to 'prod', renaming config.prod to config.
   - Production environment: The docker run command uses --env APP_ENV=prod to ensure the production config file is used.
+
+## Task 3 - Expose applications from previous point on single load balancer so that they will be accessible on paths /api/v1/ and /api/v2/
+
+Using Application Load Balancer (ALB) for both applications, ensuring they are accessible at /api/v1/ and /api/v2/. I've never done that in AWS console but after done some research I came up with this:
+
+1. Create an ALB
+  - Create Load Balancer and choose Application Load Balancer.
+
+  - Target Group 1 ("php-app-tg"):
+    - Name: "php-app-tg"
+    - Protocol: HTTP
+    - Port: The port on which  PHP application container listens (80)
+    - Health Checks: -
+    - Targets: Select EC2 instances running the PHP container
+  
+  - Target Group 2 ("go-app-tg"):
+    - Name: "php-app-tg"
+    - Protocol: HTTP
+    - Port: The port on which  PHP application container listens (80)
+    - Health Checks: -
+    - Targets: Select EC2 instances running the PHP container
+
+2. Configure ALB listener rules
+
+  - go to Listeners tab.
+  - Create the following rules in order:
+```
+Rule 1:
+Condition: Path is /api/v1/*
+Action: Forward to "php-app-tg"
+Rule 2:
+Condition: Path is /api/v2/*
+Action: Forward to "go-app-tg"
+```
+
+3. Access Your Applications
+- Get the DNS name of ALB
+- Access applications using these URLs:
+```
+PHP app: http://<ALB_DNS_NAME>/api/v1/
+Golang app: http://<ALB_DNS_NAME>/api/v2/
+```
+
+## Task 4 - Configure HPA for those two applications that you have dockerized
+
+**Prerequisites**
+PHP and Golang applications deployed as Kubernetes Deployments.
+kubectl configured with access to your EKS cluster.
+
+**Create HPAs**
+  - Create HPA resources for PHP application:
+```
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php-app-deployment  # Replace with Deployment name
+  minReplicas: 2  # Minimum number of pods
+  maxReplicas: 10 # Maximum number of pods
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+```
+
+  - Create HPA resources for GO application:
+```
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: go-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: go-app-deployment  # Replace with Deployment name
+  minReplicas: 2  # Minimum number of pods
+  maxReplicas: 10 # Maximum number of pods
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70 
+```
+
+Apply these using:
+```
+kubectl apply -f <hpa_file.yaml>
+```
+
+How it Works:
+  - The Metrics Server (if not installed, we shoudl install it) collects resource usage data (CPU, memory) from pods.
+  - The HPA controller periodically checks these metrics against the targets defined.
+  - If a target metric is being exceeded, the HPA will instruct Kubernetes to scale the number of pods in Deployment up or down.
