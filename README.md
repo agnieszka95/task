@@ -7,7 +7,7 @@
 
 **Terraform directory structure**
 1. modules:
-   - eks: defines EKS cluster configuration:
+  - eks: defines EKS cluster configuration:
       - Create the EKS cluster, specifying the VPC and subnets.
       - Create worker node groups associated with the VPC and subnets.
       - Ensure worker nodes use a launch configuration configured to pass the correct private subnets to ensure traffic is routed through the NAT Gateway.
@@ -21,16 +21,16 @@
       - Create VPC, public and private subnets, Internet Gateway.
       - Set up route tables to direct internet traffic from private subnets via a NAT Gateway.
 
-2) regions: holds region-specific TF configurations
-Each region has its own main.tf and environment-specific .tfvars files for customization.
-Call the VPC, NAT Gateway, and EKS modules.
-Use terraform workspace to manage production and testing environments.
+2. regions:
+  - Each region has its own main.tf and environment-specific .tfvars files for customization.
+  - Call the VPC, NAT Gateway, and EKS modules.
+  - Use terraform workspace to manage production and testing environments.
 
-3) variables.tf:
-   stores common variables used across the project - region, environment, VPC CIDR, subnet CIDRs, EKS cluster name, etc.
+3. variables.tf:
+  - stores common variables used across the project - region, environment, VPC CIDR, subnet CIDRs, EKS cluster name, etc.
 
-5) providers.tf:
-   defines the AWS provider and other required providers
+5. providers.tf:
+  - defines the AWS provider and other required providers
 
 Region Configuration (regions/eu-north-1/main.tf)
 
