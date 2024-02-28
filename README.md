@@ -1,3 +1,4 @@
+Task 1 - TF setup:
 
 Requirements:
 - EKS in Stockholm (eu-north-1)
@@ -40,3 +41,20 @@ Deployment:
 Initialize Terraform in each region directory.
 Use terraform workspace select to choose the environment.
 Run terraform plan and terraform apply.
+
+Task 2 - Dockerize apps:
+1) GO app
+In summary, this code sets up a basic HTTP server that listens on port 80 that serves a simple response for any request to the root URL ("/"). Before starting the server, it checks if a specific file (file.p12) exists in the current directory. If the file exists, it starts the server; otherwise, it prints an error message and terminates the program.
+
+1. Build the Docker image:
+Run the following command in the directory where Dockerfile and Golang application files (main.go, file.p12) are located:
+docker build -t my-golang-app .
+
+2. Run the Docker container:
+docker run -p 8080:80 -v $(pwd)/file.p12:/app/file.p12 my-golang-app
+
+This command will run the Docker container and map port 8080 on host to port 80 in the container. It also mounts the file.p12 from the host to the /app directory in the container.
+
+Accessing the Application:
+You can access the Golang application by navigating to http://localhost:8080 in your web browser.
+
