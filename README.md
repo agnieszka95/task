@@ -122,11 +122,11 @@ Golang app: http://<ALB_DNS_NAME>/api/v2/
 ## Task 4 - Configure HPA for those two applications that you have dockerized
 
 **Prerequisites**
-PHP and Golang applications deployed as Kubernetes Deployments.
-kubectl configured with access to your EKS cluster.
+  - PHP and Golang applications deployed as Kubernetes Deployments
 
 **Create HPAs**
   - Create HPA resources for PHP application:
+
 ```
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
