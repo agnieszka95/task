@@ -44,7 +44,7 @@ Run terraform plan and terraform apply.
 
 Task 2 - Dockerize apps:
 1) GO app
-In summary, this code sets up a basic HTTP server that listens on port 80 that serves a simple response for any request to the root URL ("/"). Before starting the server, it checks if a specific file (file.p12) exists in the current directory. If the file exists, it starts the server; otherwise, it prints an error message and terminates the program.
+This code sets up a basic HTTP server that listens on port 80 that serves a simple response for any request to the root URL ("/"). Before starting the server, it checks if a specific file (file.p12) exists in the current directory. If the file exists, it starts the server; otherwise, it prints an error message and terminates the program.
 
 1. Build the Docker image:
 Run the following command in the directory where Dockerfile and Golang application files (main.go, file.p12) are located:
@@ -58,3 +58,17 @@ This command will run the Docker container and map port 8080 on host to port 80 
 Accessing the Application:
 You can access the Golang application by navigating to http://localhost:8080 in your web browser.
 
+2) PHP app
+This code checks the APP_ENV environment variable and prints the contents of the config file if the environment is production. Otherwise, it returns an HTTP 500 internal server error.
+
+1. Build the Docker image:
+Run the following command in the directory where Dockerfile is located:
+docker build -t my-php-app .
+
+2. Run the Docker container:
+docker run -d -p 8080:80 --env APP_ENV=prod my-php-app 
+
+Explanation:
+Environment variable: The ENV APP_ENV=dev sets a default development environment.
+Config setup: The RUN if [ "$APP_ENV" = "prod" ]; then mv config.prod config; fi command executes only when the APP_ENV is set to 'prod', renaming config.prod to config.
+Production environment: The docker run command uses --env APP_ENV=prod to ensure the production config file is used.
