@@ -195,3 +195,34 @@ Considerations:
   - For production environments, use multi-AZ deployments with multi_az = true in aws_db_instance resource.
 - Read Replicas:
   - Create read replicas for scaling read operations.
+
+## Task 5 - Introduce a mechanism which will spawn a new node in a nodegroup when cluster has insufficient resources
+
+## Task 6 - Think about how we can automate adding additional users (Developers) to databases
+
+1. Infrastructure as Code (IaC) with Terraform
+
+Process:
+- Define database resources and user permissions within TF templates.
+- Maintain a list of developers and their required access levels in a config file.
+- Modify the config file to add new developers.
+- Apply the updated configuration to provision new database users and/or adjust permissions.
+
+2. CI/CD pipeline integration:
+Trigger: integrate with version control system (e.g., Git)
+
+Process:
+- Create a pipeline stage that executes database scripts (SQL, stored procedures) to create users and assign permissions.
+- Include a controlled review and approval process before these scripts execute against production databases.
+
+3. IAM integration:
+Centralized Identity:
+Federate database access management with primary IAM tool (e.g., AWS IAM, Okta).
+
+Dynamic Groups: 
+Create groups in IAM solution that map to database roles or permissions. Adding developers to these groups automatically grants them the associated database access.
+
+Example: IAM integration
+1. Create an IAM group called "Developers-ReadOnly"
+2. Assign DB permissions for read-only access to this group
+3. Add developers to this IAM group for database access.
