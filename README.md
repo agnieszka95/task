@@ -73,6 +73,6 @@ docker run -d -p 8080:80 --env APP_ENV=prod my-php-app
 ```
 
 **Explanation**
-Environment variable: The ENV APP_ENV=dev sets a default development environment.
-Config setup: The RUN if [ "$APP_ENV" = "prod" ]; then mv config.prod config; fi command executes only when the APP_ENV is set to 'prod', renaming config.prod to config.
-Production environment: The docker run command uses --env APP_ENV=prod to ensure the production config file is used.
+  - Environment variable: The ENV APP_ENV=dev sets a default development environment.
+  - Config setup: The RUN if [ "$APP_ENV" = "prod" ]; then mv config.prod config; fi command executes only when the APP_ENV is set to 'prod', renaming config.prod to config.
+  - Production environment: The docker run command uses --env APP_ENV=prod to ensure the production config file is used.
