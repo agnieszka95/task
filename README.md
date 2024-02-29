@@ -197,6 +197,16 @@ Considerations:
   - Create read replicas for scaling read operations.
 
 ## Task 5 - Introduce a mechanism which will spawn a new node in a nodegroup when cluster has insufficient resources
+We can use following components:
+
+1. Cluster Autoscaler
+Adjusts the size of your node groups based on resource demand. 
+  - Monitoring: It monitors pods in the cluster. If pods are pending due to insufficient resources (e.g., CPU, memory), the Cluster Autoscaler identifies this.
+  - Scaling Action: It communicates with cloud provider's autoscaling mechanisms (in this case, AWS Auto Scaling Groups) to add new nodes to the node group.
+  - Cooldown: The Cluster Autoscaler respects cooldown periods to avoid rapid scaling up and down.
+
+2. AWS Auto Scaling Groups
+Auto Scaling Groups (ASGs) on AWS manage a group of EC2 instances, enabling scaling in and out based on defined rules. We need an ASG linked to node group. The Cluster Autoscaler interacts with ASG to trigger its scaling actions.
 
 ## Task 6 - Think about how we can automate adding additional users (Developers) to databases
 
