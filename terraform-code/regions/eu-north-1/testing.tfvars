@@ -4,7 +4,7 @@ private_subnet_cidrs = ["10.10.10.0/24", "10.10.11.0/24"]
 
 cluster_name = "my-production-cluster"
 
-# IAM role ARNs (replace with your actual ARNs)
+# IAM role ARNs (replace with actual ARNs)
 cluster_role_arn = ""
 # arn:aws:iam::123456789012:role/eks-cluster-role
 node_group_role_arn = ""
